@@ -29,7 +29,6 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
 
   List<Map<String, String>> members = [
     {'name': 'John Doe', 'role': 'Developer'},
-    {'name': 'Tuga', 'role': 'Safado'},
     {'name': 'Jane Smith', 'role': 'Designer'},
     {'name': 'Mike Johnson', 'role': 'Project Manager'},
   ];
