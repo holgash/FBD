@@ -1,16 +1,5 @@
-# floow_boot_dashboard
+# Flow Boot Dashboard
+Projeto em Flutter para a disciplina de Fundamentos de Programação Aplicada.
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Protótipo Figma
+Link para o protótipo dessa aplicação: https://www.figma.com/proto/vjfPIWCcqho1MwfNgR7lUk/Flow-boot-dashboard?type=design&node-id=4-20&scaling=min-zoom&page-id=0%3A1&starting-point-node-id=4%3A20
