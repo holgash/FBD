@@ -26,6 +26,8 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
   // Variáveis para armazenar os valores da aba "Quality & Control"
   int qualityControlCurrent = 40;
   int qualityControlTotal = 50;
+  // Variavel para o # of Bugs in quality
+  double coverageValue = 50;
 
   List<Map<String, String>> members = [
     {'name': 'John Doe', 'role': 'Developer'},
@@ -37,13 +39,24 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
     return current / total;
   }
 
-  Color getProgressColor(double progressValue) {
-    if (progressValue < 0.3) {
-      return Colors.red;
-    } else if (progressValue < 0.7) {
-      return Colors.yellow;
+  Color getProgressColor(double progressValue,
+      {double? threshold1, double? threshold2}) {
+    if (threshold1 != null && threshold2 != null) {
+      if (progressValue < threshold1) {
+        return Colors.red;
+      } else if (progressValue < threshold2) {
+        return Colors.yellow;
+      } else {
+        return Colors.green;
+      }
     } else {
-      return Colors.green;
+      if (progressValue < 0.3) {
+        return Colors.red;
+      } else if (progressValue < 0.7) {
+        return Colors.yellow;
+      } else {
+        return Colors.green;
+      }
     }
   }
 
@@ -474,6 +487,19 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                       'Sprint Definition',
                       'Accuracy = # of US on “UAT ready” status/ # of US',
                     ),
+                    buildProgressTabIndicator(
+                      95,
+                      100,
+                      'Score',
+                      optionalParam1: 0.499,
+                      optionalParam2: 0.85,
+                    ),
+                    Center(
+                      child: Text(
+                        'Excellent(No Penalty)',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -488,6 +514,19 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                     buildProgressTabText(
                       'Issue estimation',
                       'Accuracy = # of estimated issues / # of total issues',
+                    ),
+                    buildProgressTabIndicator(
+                      90,
+                      100,
+                      'Score',
+                      optionalParam1: 0.499,
+                      optionalParam2: 0.85,
+                    ),
+                    Center(
+                      child: Text(
+                        'Good(5% Penalty)',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
                     ),
                   ],
                 ),
@@ -504,6 +543,19 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                       'Project execution',
                       'Accuracy = 100% - |∑total time / ∑estimated| (precise description pending)',
                     ),
+                    buildProgressTabIndicator(
+                      70,
+                      100,
+                      'Score',
+                      optionalParam1: 0.499,
+                      optionalParam2: 0.85,
+                    ),
+                    Center(
+                      child: Text(
+                        'To improve(5% Penalty)',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -519,6 +571,48 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                       '# of Bugs in quality',
                       '# of Bugs / # of User Stories',
                     ),
+                    Text(
+                      'If coverage is <50%, then it’s considered insufficient and full penalty is applied.',
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                    Center(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black),
+                        ),
+                        child: Center(
+                          child: buildValueRectangle(
+                              "Test Coverage: ", coverageValue, "%"),
+                        ),
+                      ),
+                    ),
+                    Center(
+                        child: Text(
+                      'Score',
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.bold),
+                    )),
+                    Center(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black),
+                        ),
+                        child: Center(
+                          child: coverageValue > 0.5
+                              ? buildValueRectangle(
+                                  "<=", 0.5, " Bugs / User Story")
+                              : buildValueRectangle("Full Penalty", null, null),
+                        ),
+                      ),
+                    ),
+                    Center(
+                        child: Text(
+                      'Excellent(No penalty)',
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.bold),
+                    )),
                   ],
                 ),
               ),
@@ -558,7 +652,12 @@ Aqui começam as funções
   }
 
   Widget buildProgressTabIndicator(
-      double progressValue, double progressTotal, String title) {
+      double progressValue, double progressTotal, String title,
+      {double? optionalParam1, double? optionalParam2}) {
+    double progressRatio = progressValue / progressTotal;
+    Color progressColor = getProgressColor(progressRatio,
+        threshold1: optionalParam1, threshold2: optionalParam2);
+
     return Container(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -569,9 +668,8 @@ Aqui começam as funções
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
           LinearProgressIndicator(
-            value: progressValue / progressTotal,
-            valueColor: AlwaysStoppedAnimation<Color>(
-                getProgressColor(progressValue / progressTotal)),
+            value: progressRatio,
+            valueColor: AlwaysStoppedAnimation<Color>(progressColor),
             backgroundColor: Colors.grey[300],
           ),
           SizedBox(height: 8.0),
@@ -637,6 +735,20 @@ Aqui começam as funções
             ),
           ],
         ],
+      ),
+    );
+  }
+
+  Widget buildValueRectangle(String text, double? value, String? optionalText) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black),
+      ),
+      child: Center(
+        child: Text(
+          text + (value != null ? value.toString() : '') + (optionalText ?? ''),
+          style: TextStyle(fontSize: 16.0),
+        ),
       ),
     );
   }
