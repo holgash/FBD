@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'project_details_page.dart';
+import 'dart:convert';
 
 class ProjectPage extends StatefulWidget {
   @override
@@ -7,24 +9,40 @@ class ProjectPage extends StatefulWidget {
 }
 
 class _ProjectPageState extends State<ProjectPage> {
-  String? selectedFilter =
-      'Todos'; // Valor inicial selecionado para DropdownButton
+  String? selectedFilter = 'Todos';
   List<String> filterOptions = ['Todos', 'Concluídos', 'Em progresso'];
-  String? selectedRadio; // Valor inicial selecionado para radio button
+  String? selectedRadio;
   List<String> radioOptions = ['Global', 'Agile Delivery', 'AMS', 'M&S'];
+  List<Map<String, dynamic>> projectDetails = [];
 
   @override
   void initState() {
     super.initState();
-    selectedRadio =
-        'Global'; // Definir 'Global' como a opção padrão selecionada
+    loadProjectDetails();
+    selectedRadio = 'Global';
   }
 
-  void _onProjectSelected(String project) {
+  void loadProjectDetails() async {
+    String jsonData = await rootBundle.loadString('assets/projects.json');
+    List<dynamic> projects = jsonDecode(jsonData)['projetos'];
+    setState(() {
+      projectDetails = projects.map((project) {
+        return {
+          'id': project['id'],
+          'project_name': project['project_name'],
+          'project_type': project['project_type'],
+        };
+      }).toList();
+    });
+  }
+
+  void _onProjectSelected(
+      String projectName, String projectType, int projectId) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ProjectDetailsPage(project),
+        builder: (context) =>
+            ProjectDetailsPage(projectName, projectType, projectId),
       ),
     );
   }
@@ -33,7 +51,7 @@ class _ProjectPageState extends State<ProjectPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Projects')), // Centralizar o título
+        title: Center(child: Text('Projects')),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,8 +86,7 @@ class _ProjectPageState extends State<ProjectPage> {
             child: Wrap(
               children: radioOptions.map((String option) {
                 return Container(
-                  width: MediaQuery.of(context).size.width /
-                      2, // Dividir o espaço em duas colunas
+                  width: MediaQuery.of(context).size.width / 2,
                   child: RadioListTile<String>(
                     title: Text(option),
                     value: option,
@@ -87,16 +104,18 @@ class _ProjectPageState extends State<ProjectPage> {
           SizedBox(height: 16.0),
           Expanded(
             child: ListView.builder(
-              itemCount: 10, // Número de resultados fictícios
+              itemCount: projectDetails.length,
               itemBuilder: (BuildContext context, int index) {
-                final project = 'Projeto $index';
+                final project = projectDetails[index];
+                final id = project['id'];
+                final projectName = project['project_name'];
+                final projectType = project['project_type'];
                 return ListTile(
-                  title: Text(project),
-                  subtitle: Text('Descrição do Projeto $index'),
+                  title: Text('$id - $projectName'),
+                  subtitle: Text('Project type: $projectType'),
                   trailing: Icon(Icons.arrow_forward),
                   onTap: () {
-                    // Ação ao tocar em um item da lista
-                    _onProjectSelected(project);
+                    _onProjectSelected(projectName, projectType, id);
                   },
                 );
               },

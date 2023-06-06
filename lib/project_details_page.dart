@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'linear_charts.dart';
 
 class ProjectDetailsPage extends StatefulWidget {
-  final String project;
-
-  ProjectDetailsPage(this.project);
+  final String projectName;
+  final String projectType;
+  final int projectId;
+  ProjectDetailsPage(this.projectName, this.projectType, this.projectId);
 
   @override
   _ProjectDetailsPageState createState() => _ProjectDetailsPageState();
@@ -130,6 +132,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                         );
                       },
                     ),
+                    LinearCharts(id: widget.projectId),
                   ],
                 ),
               ),
