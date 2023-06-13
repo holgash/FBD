@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'linear_charts.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
 
 class ProjectDetailsPage extends StatefulWidget {
   final String projectName;
@@ -17,6 +19,8 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
   bool _isExpandedBoardManagement = false;
   bool _isExpandedQualityControl = false;
 
+  int sprintValue = 0;
+
   // Variáveis para armazenar os valores da aba "User Story Definition"
   int userStoryCurrent = 15;
   int userStoryTotal = 25;
@@ -31,11 +35,27 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
   // Variavel para o # of Bugs in quality
   double coverageValue = 50;
 
-  List<Map<String, String>> members = [
+  /*List<Map<String, String>> members = [
     {'name': 'John Doe', 'role': 'Developer'},
     {'name': 'Jane Smith', 'role': 'Designer'},
     {'name': 'Mike Johnson', 'role': 'Project Manager'},
-  ];
+  ];*/
+
+  List<Map<String, String>> members = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchMembers();
+  }
+
+  Future<void> fetchMembers() async {
+    List<Map<String, String>> fetchedMembers =
+        await getMembersFromJson(widget.projectId);
+    setState(() {
+      members = fetchedMembers;
+    });
+  }
 
   double calculateProgressValue(int current, int total) {
     return current / total;
@@ -60,6 +80,72 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
         return Colors.green;
       }
     }
+  }
+
+  Future<int> obterValorSprint(int id) async {
+    try {
+      // Ler o conteúdo do arquivo JSON
+      String jsonData = await rootBundle.loadString('assets/sprint.json');
+
+      // Decodificar o conteúdo JSON
+      var data = jsonDecode(jsonData);
+
+      // Procurar o projeto com o ID fornecido
+      var projeto = data['projetos']
+          .firstWhere((projeto) => projeto['id'] == id, orElse: () => null);
+
+      // Verificar se o projeto foi encontrado
+      if (projeto != null) {
+        // Obter o array de dados do projeto
+        var dados = projeto['dados'];
+
+        // Verificar se o array de dados não está vazio
+        if (dados.isNotEmpty) {
+          // Obter o último elemento do array de dados
+          var ultimoElemento = dados.last;
+
+          // Obter o valor da sprint do último elemento
+          var valorSprint = ultimoElemento['sprint'];
+
+          // Retornar o valor da sprint
+          return valorSprint;
+        }
+      }
+    } catch (e) {
+      print('Erro ao ler o arquivo JSON: $e');
+    }
+
+    // Retornar 0 caso ocorra algum erro ou o projeto não seja encontrado
+    return 0;
+  }
+
+  Future<List<Map<String, String>>> getMembersFromJson(int id) async {
+    List<Map<String, String>> members = [];
+
+    // Ler o conteúdo do arquivo JSON
+    String jsonData = await rootBundle.loadString('assets/projects.json');
+
+    // Converter o JSON em um objeto Dart
+    dynamic data = jsonDecode(jsonData);
+
+    // Encontrar o projeto com o ID fornecido
+    Map<String, dynamic>? project = data['projetos']
+        .firstWhere((proj) => proj['id'] == id, orElse: () => null);
+
+    // Verificar se o projeto foi encontrado
+    if (project != null) {
+      // Obter a lista de membros do projeto
+      List<dynamic> membersData = project['members'];
+
+      // Iterar sobre os membros e converter para o formato desejado
+      members = membersData.map<Map<String, String>>((member) {
+        String name = member['name'];
+        String role = member['role'];
+        return {'name': name, 'role': role};
+      }).toList();
+    }
+
+    return members;
   }
 
   @override
@@ -94,9 +180,28 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                           ),
                         ),
                         SizedBox(width: 16.0),
-                        Text(
-                          'Current Sprint: 5',
-                          style: TextStyle(fontSize: 18.0),
+                        FutureBuilder<int>(
+                          future: obterValorSprint(widget.projectId),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<int> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Text(
+                                'Loading...',
+                                style: TextStyle(fontSize: 18.0),
+                              ); // Exibir um indicador de carregamento enquanto aguarda o resultado
+                            } else if (snapshot.hasError) {
+                              return Text(
+                                'Error',
+                                style: TextStyle(fontSize: 18.0),
+                              ); // Exibir uma mensagem de erro caso ocorra um erro durante a obtenção do valor
+                            } else {
+                              return Text(
+                                'Current Sprint: ${snapshot.data}',
+                                style: TextStyle(fontSize: 18.0),
+                              ); // Exibir o valor da sprint obtido
+                            }
+                          },
                         ),
                       ],
                     ),

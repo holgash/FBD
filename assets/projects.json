@@ -3,52 +3,122 @@
     {
       "id": 0,
       "project_name": "Projeto A",
-      "project_type": "Agile Delivery"
+      "project_type": "Agile Delivery",
+      "members": [
+        { "name": "João Silva", "role": "DEV" },
+        { "name": "Maria Santos", "role": "EM" },
+        { "name": "Pedro Almeida", "role": "TL" },
+        { "name": "Ana Costa", "role": "DEV" },
+        { "name": "Ricardo Oliveira", "role": "DEV" }
+      ]
     },
     {
       "id": 1,
       "project_name": "Projeto B",
-      "project_type": "AMS"
+      "project_type": "AMS",
+      "members": [
+        { "name": "Carlos Almeida", "role": "DEV" },
+        { "name": "Mariana Costa", "role": "EM" },
+        { "name": "Ricardo Almeida", "role": "TL" },
+        { "name": "Fernanda Silva", "role": "DEV" },
+        { "name": "Lúcia Costa", "role": "DEV" }
+      ]
     },
     {
       "id": 2,
       "project_name": "Projeto C",
-      "project_type": "M&S"
+      "project_type": "M&S",
+      "members": [
+        { "name": "João Silva", "role": "DEV" },
+        { "name": "Maria Santos", "role": "EM" },
+        { "name": "Pedro Almeida", "role": "TL" },
+        { "name": "Ana Costa", "role": "DEV" },
+        { "name": "Ricardo Oliveira", "role": "DEV" }
+      ]
     },
     {
       "id": 3,
       "project_name": "Projeto D",
-      "project_type": "Agile Delivery"
+      "project_type": "Agile Delivery",
+      "members": [
+        { "name": "José Santos", "role": "DEV" },
+        { "name": "Fernanda Silva", "role": "EM" },
+        { "name": "Mariana Almeida", "role": "TL" },
+        { "name": "Ricardo Oliveira", "role": "DEV" },
+        { "name": "Lúcia Costa", "role": "DEV" }
+      ]
     },
     {
       "id": 4,
       "project_name": "Projeto E",
-      "project_type": "AMS"
+      "project_type": "AMS",
+      "members": [
+        { "name": "João Silva", "role": "DEV" },
+        { "name": "Maria Santos", "role": "EM" },
+        { "name": "Pedro Almeida", "role": "TL" },
+        { "name": "Ana Costa", "role": "DEV" },
+        { "name": "Ricardo Oliveira", "role": "DEV" }
+      ]
     },
     {
       "id": 5,
       "project_name": "Projeto F",
-      "project_type": "M&S"
+      "project_type": "M&S",
+      "members": [
+        { "name": "Carlos Almeida", "role": "DEV" },
+        { "name": "Mariana Costa", "role": "EM" },
+        { "name": "Ricardo Almeida", "role": "TL" },
+        { "name": "Fernanda Silva", "role": "DEV" },
+        { "name": "Lúcia Costa", "role": "DEV" }
+      ]
     },
     {
       "id": 6,
       "project_name": "Projeto G",
-      "project_type": "Agile Delivery"
+      "project_type": "Agile Delivery",
+      "members": [
+        { "name": "João Silva", "role": "DEV" },
+        { "name": "Maria Santos", "role": "EM" },
+        { "name": "Pedro Almeida", "role": "TL" },
+        { "name": "Ana Costa", "role": "DEV" },
+        { "name": "Ricardo Oliveira", "role": "DEV" }
+      ]
     },
     {
       "id": 7,
       "project_name": "Projeto H",
-      "project_type": "AMS"
+      "project_type": "AMS",
+      "members": [
+        { "name": "José Santos", "role": "DEV" },
+        { "name": "Fernanda Silva", "role": "EM" },
+        { "name": "Mariana Almeida", "role": "TL" },
+        { "name": "Ricardo Oliveira", "role": "DEV" },
+        { "name": "Lúcia Costa", "role": "DEV" }
+      ]
     },
     {
       "id": 8,
       "project_name": "Projeto I",
-      "project_type": "M&S"
+      "project_type": "M&S",
+      "members": [
+        { "name": "Carlos Almeida", "role": "DEV" },
+        { "name": "Mariana Costa", "role": "EM" },
+        { "name": "Ricardo Almeida", "role": "TL" },
+        { "name": "Fernanda Silva", "role": "DEV" },
+        { "name": "Lúcia Costa", "role": "DEV" }
+      ]
     },
     {
       "id": 9,
       "project_name": "Projeto J",
-      "project_type": "Agile Delivery"
+      "project_type": "Agile Delivery",
+      "members": [
+        { "name": "João Silva", "role": "DEV" },
+        { "name": "Maria Santos", "role": "EM" },
+        { "name": "Pedro Almeida", "role": "TL" },
+        { "name": "Ana Costa", "role": "DEV" },
+        { "name": "Ricardo Oliveira", "role": "DEV" }
+      ]
     }
   ]
 }

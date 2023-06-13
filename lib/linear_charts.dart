@@ -22,8 +22,12 @@ class _LinearChartsState extends State<LinearCharts> {
     super.initState();
     readJsonData().then((jsonData) {
       setState(() {
+        // Buscar o item correto com base no valor de widget.id
+        final item = jsonData['projetos']
+            .firstWhere((projeto) => projeto['id'] == widget.id);
+
         // Ler os dados do JSON e converter para a lista de Expenses
-        data = List<Expenses>.from(jsonData['projetos'][widget.id]['dados'].map(
+        data = List<Expenses>.from(item['dados'].map(
             (item) => Expenses(item['sprint'] as int, item['score'] as int)));
       });
     });

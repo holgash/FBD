@@ -9,11 +9,12 @@ class ProjectPage extends StatefulWidget {
 }
 
 class _ProjectPageState extends State<ProjectPage> {
-  String? selectedFilter = 'Todos';
-  List<String> filterOptions = ['Todos', 'Concluídos', 'Em progresso'];
+  String? selectedFilter;
+  List<String> filterOptions = [];
   String? selectedRadio;
   List<String> radioOptions = ['Global', 'Agile Delivery', 'AMS', 'M&S'];
   List<Map<String, dynamic>> projectDetails = [];
+  List<Map<String, dynamic>> filteredProjectDetails = [];
 
   @override
   void initState() {
@@ -26,6 +27,13 @@ class _ProjectPageState extends State<ProjectPage> {
     String jsonData = await rootBundle.loadString('assets/projects.json');
     List<dynamic> projects = jsonDecode(jsonData)['projetos'];
     setState(() {
+      filterOptions = [
+        'All Projects',
+        ...projects.map<String>((project) {
+          return project['project_name'] as String;
+        }).toList()
+      ];
+      selectedFilter = filterOptions.isNotEmpty ? filterOptions[0] : null;
       projectDetails = projects.map((project) {
         return {
           'id': project['id'],
@@ -33,7 +41,27 @@ class _ProjectPageState extends State<ProjectPage> {
           'project_type': project['project_type'],
         };
       }).toList();
+      filteredProjectDetails = filterProjects();
     });
+  }
+
+  List<Map<String, dynamic>> filterProjects() {
+    if (selectedFilter == 'All Projects' && selectedRadio == 'Global') {
+      return projectDetails;
+    } else if (selectedFilter == 'All Projects') {
+      return projectDetails.where((project) {
+        return project['project_type'] == selectedRadio;
+      }).toList();
+    } else if (selectedRadio == 'Global') {
+      return projectDetails.where((project) {
+        return project['project_name'] == selectedFilter;
+      }).toList();
+    } else {
+      return projectDetails.where((project) {
+        return project['project_name'] == selectedFilter &&
+            project['project_type'] == selectedRadio;
+      }).toList();
+    }
   }
 
   void _onProjectSelected(
@@ -45,6 +73,21 @@ class _ProjectPageState extends State<ProjectPage> {
             ProjectDetailsPage(projectName, projectType, projectId),
       ),
     );
+  }
+
+  void _onRadioSelected(String? value) {
+    setState(() {
+      selectedRadio = value;
+
+      filteredProjectDetails = filterProjects();
+    });
+  }
+
+  void _onFilterSelected(String? value) {
+    setState(() {
+      selectedFilter = value;
+      filteredProjectDetails = filterProjects();
+    });
   }
 
   @override
@@ -59,7 +102,7 @@ class _ProjectPageState extends State<ProjectPage> {
           Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
-              'Filtro:',
+              'Filter:',
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
           ),
@@ -67,11 +110,7 @@ class _ProjectPageState extends State<ProjectPage> {
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: DropdownButton<String>(
               value: selectedFilter,
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedFilter = newValue;
-                });
-              },
+              onChanged: _onFilterSelected,
               items: filterOptions.map((String option) {
                 return DropdownMenuItem<String>(
                   value: option,
@@ -91,11 +130,7 @@ class _ProjectPageState extends State<ProjectPage> {
                     title: Text(option),
                     value: option,
                     groupValue: selectedRadio,
-                    onChanged: (String? value) {
-                      setState(() {
-                        selectedRadio = value;
-                      });
-                    },
+                    onChanged: _onRadioSelected,
                   ),
                 );
               }).toList(),
@@ -104,9 +139,9 @@ class _ProjectPageState extends State<ProjectPage> {
           SizedBox(height: 16.0),
           Expanded(
             child: ListView.builder(
-              itemCount: projectDetails.length,
+              itemCount: filteredProjectDetails.length,
               itemBuilder: (BuildContext context, int index) {
-                final project = projectDetails[index];
+                final project = filteredProjectDetails[index];
                 final id = project['id'];
                 final projectName = project['project_name'];
                 final projectType = project['project_type'];
