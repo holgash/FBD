@@ -22,16 +22,16 @@ class DetailedScore {
       boardManagementScore:
           BoardManagementScore.fromJson(json['board_management_score']),
       qualityControlScore:
-          QualityControlScore.fromJson(json['quality_&_control_score']),
+          QualityControlScore.fromJson(json['quality_control_score']),
     );
   }
 }
 
 class UserStoryDefinitionScore {
-  Map<String, OTE> USS;
-  bool SUS1;
-  bool SUS2;
-  bool SUS3;
+  Map<String, int> USS;
+  SUScore SUS1;
+  SUScore SUS2;
+  SUScore SUS3;
 
   UserStoryDefinitionScore({
     required this.USS,
@@ -41,16 +41,33 @@ class UserStoryDefinitionScore {
   });
 
   factory UserStoryDefinitionScore.fromJson(Map<String, dynamic> json) {
-    Map<String, OTE> uss = {};
+    Map<String, int> uss = {};
     json['USS'].forEach((key, value) {
-      uss[key] = OTE.fromJson(value);
+      uss[key] = value;
     });
 
     return UserStoryDefinitionScore(
       USS: uss,
-      SUS1: json['SUS1'],
-      SUS2: json['SUS2'],
-      SUS3: json['SUS3'],
+      SUS1: SUScore.fromJson(json['SUS1']),
+      SUS2: SUScore.fromJson(json['SUS2']),
+      SUS3: SUScore.fromJson(json['SUS3']),
+    );
+  }
+}
+
+class SUScore {
+  bool acceptanceCriteria;
+  bool definitionOfReady;
+
+  SUScore({
+    required this.acceptanceCriteria,
+    required this.definitionOfReady,
+  });
+
+  factory SUScore.fromJson(Map<String, dynamic> json) {
+    return SUScore(
+      acceptanceCriteria: json['Acceptance Criteria'],
+      definitionOfReady: json['Definition of Ready'],
     );
   }
 }
@@ -108,9 +125,9 @@ class BPScore {
 
   factory BPScore.fromJson(Map<String, dynamic> json) {
     return BPScore(
-      prioritized: json['Prioritizated'],
-      medium: json['medium'],
-      high: json['high'],
+      prioritized: json['Prioritized'],
+      medium: json['Medium'],
+      high: json['High'],
     );
   }
 }
@@ -129,15 +146,15 @@ class Defects {
   factory Defects.fromJson(Map<String, dynamic> json) {
     return Defects(
       classified: json['Classified'],
-      prioritized: json['prioritizated'],
-      estimated: json['estimated'],
+      prioritized: json['Prioritized'],
+      estimated: json['Estimated'],
     );
   }
 }
 
 class FEDesign {
-  bool FE;
-  bool design;
+  int FE;
+  int design;
 
   FEDesign({
     required this.FE,
@@ -147,7 +164,7 @@ class FEDesign {
   factory FEDesign.fromJson(Map<String, dynamic> json) {
     return FEDesign(
       FE: json['FE'],
-      design: json['design'],
+      design: json['Design'],
     );
   }
 }
@@ -166,6 +183,7 @@ class QualityControlScore {
   });
 
   factory QualityControlScore.fromJson(Map<String, dynamic> json) {
+    print(json);
     return QualityControlScore(
       sprintDefinition: json['SprintDefinition'],
       issueEstimation: json['IssueEstimation'],
@@ -178,7 +196,7 @@ class QualityControlScore {
 class NumBugs {
   int numBugs;
   int numStories;
-  int coverage;
+  double coverage;
 
   NumBugs({
     required this.numBugs,
@@ -195,19 +213,20 @@ class NumBugs {
   }
 }
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Initialize Flutter binding
+class categoryScore {
+  int usdScore;
+  int bmScore;
+  int qcScore;
 
-  String json = await rootBundle.loadString('assets/sprint.json');
-
-  DetailedScore detailedScore = parseDetailedScore(json, 1);
-  print(detailedScore
-      .userStoryDefinitionScore.USS['OTE1']?.acceptanceCriteria); // true
-  print(detailedScore.boardManagementScore.bpScore.medium); // 5
-  print(detailedScore.qualityControlScore.numBugs.numBugs); // 2
+  categoryScore({
+    this.usdScore = 0,
+    this.bmScore = 0,
+    this.qcScore = 0,
+  });
 }
 
-DetailedScore parseDetailedScore(String jsonString, int id) {
+Future<DetailedScore> parseDetailedScore(int id) async {
+  String jsonString = await rootBundle.loadString('assets/sprint.json');
   final Map<String, dynamic> json = jsonDecode(jsonString);
 
   Map<String, dynamic>? project = json['projetos']

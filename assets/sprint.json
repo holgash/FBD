@@ -1,58 +1,131 @@
 {
   "projetos": [
     {
-      "id": 1,
+      "id": 0,
       "dados": [
         {
           "sprint": 1,
-          "score": 50
+          "score": 80
+        },
+        {
+          "sprint": 2,
+          "score": 85
         }
       ],
       "detailed_score": {
         "user_story_definition_score": {
           "USS": {
-            "OTE1": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": true
-            },
-            "OTE2": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": false
-            },
-            "OTE3": {
-              "Acceptance Criteria": false,
-              "Definition of Ready": true
-            }
+            "OTE1": 15,
+            "OTE2": 30,
+            "OTE3": 55
           },
-          "SUS1": true,
-          "SUS2": false,
-          "SUS3": true
+          "SUS1": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": true
+          },
+          "SUS2": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": false
+          },
+          "SUS3": {
+            "Acceptance Criteria": false,
+            "Definition of Ready": true
+          }
         },
         "board_management_score": {
           "SGD": true,
           "BP": {
-            "Prioritizated": true,
-            "medium": 5,
-            "high": 3
+            "Prioritized": true,
+            "Medium": 2,
+            "High": 1
           },
           "Defects": {
             "Classified": true,
-            "prioritizated": false,
-            "estimated": true
+            "Prioritized": false,
+            "Estimated": true
           },
           "FE+DI": {
-            "FE": true,
-            "design": false
+            "FE": 0,
+            "Design": 7
+          }          
+        },
+        "quality_control_score": {
+          "SprintDefinition": 10,
+          "IssueEstimation": 20,
+          "ProjectExecution": 30,
+          "num_bugs": {
+            "num_bugs": 3,
+            "num_stories": 10,
+            "coverage": 0.8
+          }
+        }
+      }
+    },
+    {
+      "id": 1,
+      "dados": [
+        {
+          "sprint": 1,
+          "score": 70
+        },
+        {
+          "sprint": 2,
+          "score": 75
+        },
+        {
+          "sprint": 3,
+          "score": 65
+        },
+        {
+          "sprint": 4,
+          "score": 80
+        }
+      ],
+      "detailed_score": {
+        "user_story_definition_score": {
+          "USS": {
+            "OTE1": 40,
+            "OTE2": 30,
+            "OTE3": 30
+          },
+          "SUS1": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": true
+          },
+          "SUS2": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": false
+          },
+          "SUS3": {
+            "Acceptance Criteria": false,
+            "Definition of Ready": true
           }
         },
-        "quality_&_control_score": {
-          "SprintDefinition": 90,
-          "IssueEstimation": 85,
-          "ProjectExecution": 80,
+        "board_management_score": {
+          "SGD": false,
+          "BP": {
+            "Prioritized": false,
+            "Medium": 3,
+            "High": 2
+          },
+          "Defects": {
+            "Classified": true,
+            "Prioritized": true,
+            "Estimated": true
+          },
+          "FE+DI": {
+            "FE": 9,
+            "Design": 3
+          }          
+        },
+        "quality_control_score": {
+          "SprintDefinition": 40,
+          "IssueEstimation": 50,
+          "ProjectExecution": 60,
           "num_bugs": {
             "num_bugs": 2,
-            "num_stories": 10,
-            "coverage": 70
+            "num_stories": 12,
+            "coverage": 0.85
           }
         }
       }
@@ -62,58 +135,54 @@
       "dados": [
         {
           "sprint": 1,
-          "score": 61
-        },
-        {
-          "sprint": 2,
-          "score": 79
+          "score": 90
         }
       ],
       "detailed_score": {
         "user_story_definition_score": {
           "USS": {
-            "OTE1": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": true
-            },
-            "OTE2": {
-              "Acceptance Criteria": false,
-              "Definition of Ready": true
-            },
-            "OTE3": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": false
-            }
+            "OTE1": 10,
+            "OTE2": 20,
+            "OTE3": 70
           },
-          "SUS1": true,
-          "SUS2": false,
-          "SUS3": true
+          "SUS1": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": true
+          },
+          "SUS2": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": true
+          },
+          "SUS3": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": false
+          }
         },
         "board_management_score": {
           "SGD": true,
           "BP": {
-            "Prioritizated": true,
-            "medium": 5,
-            "high": 3
+            "Prioritized": true,
+            "Medium": 1,
+            "High": 3
           },
           "Defects": {
-            "Classified": true,
-            "prioritizated": false,
-            "estimated": true
+            "Classified": false,
+            "Prioritized": true,
+            "Estimated": false
           },
           "FE+DI": {
-            "FE": true,
-            "design": false
-          }
+            "FE": 0,
+            "Design": 5
+          }          
         },
-        "quality_&_control_score": {
-          "SprintDefinition": 90,
-          "IssueEstimation": 85,
-          "ProjectExecution": 80,
+        "quality_control_score": {
+          "SprintDefinition": 70,
+          "IssueEstimation": 80,
+          "ProjectExecution": 90,
           "num_bugs": {
-            "num_bugs": 2,
-            "num_stories": 10,
-            "coverage": 70
+            "num_bugs": 5,
+            "num_stories": 15,
+            "coverage": 0.75
           }
         }
       }
@@ -123,62 +192,62 @@
       "dados": [
         {
           "sprint": 1,
-          "score": 94
+          "score": 95
         },
         {
           "sprint": 2,
-          "score": 57
+          "score": 80
         },
         {
           "sprint": 3,
-          "score": 83
+          "score": 70
         }
       ],
       "detailed_score": {
         "user_story_definition_score": {
           "USS": {
-            "OTE1": {
-              "Acceptance Criteria": false,
-              "Definition of Ready": true
-            },
-            "OTE2": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": false
-            },
-            "OTE3": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": true
-            }
+            "OTE1": 25,
+            "OTE2": 45,
+            "OTE3": 30
           },
-          "SUS1": false,
-          "SUS2": true,
-          "SUS3": true
+          "SUS1": {
+            "Acceptance Criteria": false,
+            "Definition of Ready": false
+          },
+          "SUS2": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": false
+          },
+          "SUS3": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": true
+          }
         },
         "board_management_score": {
           "SGD": true,
           "BP": {
-            "Prioritizated": true,
-            "medium": 3,
-            "high": 2
+            "Prioritized": false,
+            "Medium": 2,
+            "High": 1
           },
           "Defects": {
             "Classified": true,
-            "prioritizated": true,
-            "estimated": false
+            "Prioritized": true,
+            "Estimated": true
           },
           "FE+DI": {
-            "FE": false,
-            "design": true
-          }
+            "FE": 2,
+            "Design": 1
+          }          
         },
-        "quality_&_control_score": {
-          "SprintDefinition": 85,
-          "IssueEstimation": 78,
-          "ProjectExecution": 92,
+        "quality_control_score": {
+          "SprintDefinition": 15,
+          "IssueEstimation": 25,
+          "ProjectExecution": 35,
           "num_bugs": {
             "num_bugs": 4,
-            "num_stories": 15,
-            "coverage": 80
+            "num_stories": 8,
+            "coverage": 0.9
           }
         }
       }
@@ -188,66 +257,54 @@
       "dados": [
         {
           "sprint": 1,
-          "score": 72
-        },
-        {
-          "sprint": 2,
-          "score": 87
-        },
-        {
-          "sprint": 3,
-          "score": 65
-        },
-        {
-          "sprint": 4,
-          "score": 91
+          "score": 75
         }
       ],
       "detailed_score": {
         "user_story_definition_score": {
           "USS": {
-            "OTE1": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": false
-            },
-            "OTE2": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": true
-            },
-            "OTE3": {
-              "Acceptance Criteria": false,
-              "Definition of Ready": true
-            }
+            "OTE1": 35,
+            "OTE2": 25,
+            "OTE3": 40
           },
-          "SUS1": true,
-          "SUS2": true,
-          "SUS3": false
-        },
-        "board_management_score": {
-          "SGD": true,
-          "BP": {
-            "Prioritizated": false,
-            "medium": 2,
-            "high": 4
+          "SUS1": {
+            "Acceptance Criteria": false,
+            "Definition of Ready": true
           },
-          "Defects": {
-            "Classified": true,
-            "prioritizated": true,
-            "estimated": true
+          "SUS2": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": true
           },
-          "FE+DI": {
-            "FE": true,
-            "design": true
+          "SUS3": {
+            "Acceptance Criteria": false,
+            "Definition of Ready": false
           }
         },
-        "quality_&_control_score": {
-          "SprintDefinition": 78,
-          "IssueEstimation": 92,
-          "ProjectExecution": 85,
+        "board_management_score": {
+          "SGD": false,
+          "BP": {
+            "Prioritized": true,
+            "Medium": 3,
+            "High": 2
+          },
+          "Defects": {
+            "Classified": false,
+            "Prioritized": false,
+            "Estimated": false
+          },
+          "FE+DI": {
+            "FE": 0,
+            "Design": 8
+          }          
+        },
+        "quality_control_score": {
+          "SprintDefinition": 45,
+          "IssueEstimation": 55,
+          "ProjectExecution": 65,
           "num_bugs": {
-            "num_bugs": 3,
-            "num_stories": 12,
-            "coverage": 75
+            "num_bugs": 2,
+            "num_stories": 11,
+            "coverage": 0.82
           }
         }
       }
@@ -257,70 +314,70 @@
       "dados": [
         {
           "sprint": 1,
-          "score": 81
+          "score": 85
         },
         {
           "sprint": 2,
-          "score": 68
+          "score": 90
         },
         {
           "sprint": 3,
-          "score": 73
+          "score": 95
         },
         {
           "sprint": 4,
-          "score": 89
+          "score": 80
         },
         {
           "sprint": 5,
-          "score": 77
+          "score": 75
         }
       ],
       "detailed_score": {
         "user_story_definition_score": {
           "USS": {
-            "OTE1": {
-              "Acceptance Criteria": false,
-              "Definition of Ready": true
-            },
-            "OTE2": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": true
-            },
-            "OTE3": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": false
-            }
+            "OTE1": 20,
+            "OTE2": 40,
+            "OTE3": 40
           },
-          "SUS1": false,
-          "SUS2": true,
-          "SUS3": true
+          "SUS1": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": true
+          },
+          "SUS2": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": true
+          },
+          "SUS3": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": false
+          }
         },
         "board_management_score": {
           "SGD": true,
           "BP": {
-            "Prioritizated": true,
-            "medium": 4,
-            "high": 3
+            "Prioritized": true,
+            "Medium": 2,
+            "High": 1
           },
           "Defects": {
             "Classified": true,
-            "prioritizated": false,
-            "estimated": true
+            "Prioritized": false,
+            "Estimated": true
           },
           "FE+DI": {
-            "FE": true,
-            "design": false
-          }
+            "FE": 0,
+            "Design": 4
+          }          
         },
-        "quality_&_control_score": {
-          "SprintDefinition": 86,
-          "IssueEstimation": 80,
-          "ProjectExecution": 75,
+        "quality_control_score": {
+          "SprintDefinition": 75,
+          "IssueEstimation": 85,
+          "ProjectExecution": 95,
           "num_bugs": {
-            "num_bugs": 2,
-            "num_stories": 8,
-            "coverage": 68
+            "num_bugs": 4,
+            "num_stories": 14,
+            "coverage": 0.88
           }
         }
       }
@@ -330,74 +387,70 @@
       "dados": [
         {
           "sprint": 1,
-          "score": 90
+          "score": 70
         },
         {
           "sprint": 2,
-          "score": 75
+          "score": 65
         },
         {
           "sprint": 3,
-          "score": 68
+          "score": 80
         },
         {
           "sprint": 4,
-          "score": 82
+          "score": 75
         },
         {
           "sprint": 5,
-          "score": 93
-        },
-        {
-          "sprint": 6,
-          "score": 79
+          "score": 85
         }
       ],
       "detailed_score": {
         "user_story_definition_score": {
           "USS": {
-            "OTE1": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": true
-            },
-            "OTE2": {
-              "Acceptance Criteria": false,
-              "Definition of Ready": true
-            },
-            "OTE3": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": false
-            }
+            "OTE1": 30,
+            "OTE2": 35,
+            "OTE3": 35
           },
-          "SUS1": true,
-          "SUS2": false,
-          "SUS3": true
+          "SUS1": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": true
+          },
+          "SUS2": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": false
+          },
+          "SUS3": {
+            "Acceptance Criteria": false,
+            "Definition of Ready": true
+          }
         },
         "board_management_score": {
-          "SGD": true,
+          "SGD": false,
           "BP": {
-            "Prioritizated": true,
-            "medium": 3,
-            "high": 4
+            "Prioritized": true,
+            "Medium": 3,
+            "High": 2
           },
           "Defects": {
             "Classified": true,
-            "prioritizated": true,
-            "estimated": false
+            "Prioritized": true,
+            "Estimated": true
           },
           "FE+DI": {
-            "FE": false,
-            "design": true
-          }
+            "FE": 6,
+            "Design": 0
+          }          
         },
-        "quality_&_control_score": {
-          "SprintDefinition": 88,
-          "IssueEstimation": 83,
-          "ProjectExecution": 78,
+        "quality_control_score": {
+          "SprintDefinition": 5,
+          "IssueEstimation": 15,
+          "ProjectExecution": 25,
           "num_bugs": {
             "num_bugs": 3,
-            "num_stories": 12,
-            "coverage": 72
+            "num_stories": 13,
+            "coverage": 0.85
           }
         }
       }
@@ -407,78 +460,74 @@
       "dados": [
         {
           "sprint": 1,
-          "score": 76
+          "score": 75
         },
         {
           "sprint": 2,
-          "score": 83
+          "score": 80
         },
         {
           "sprint": 3,
-          "score": 92
+          "score": 85
         },
         {
           "sprint": 4,
-          "score": 69
+          "score": 70
         },
         {
           "sprint": 5,
-          "score": 87
+          "score": 65
         },
         {
           "sprint": 6,
-          "score": 78
-        },
-        {
-          "sprint": 7,
-          "score": 95
+          "score": 75
         }
       ],
       "detailed_score": {
         "user_story_definition_score": {
           "USS": {
-            "OTE1": {
-              "Acceptance Criteria": false,
-              "Definition of Ready": true
-            },
-            "OTE2": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": true
-            },
-            "OTE3": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": false
-            }
+            "OTE1": 15,
+            "OTE2": 35,
+            "OTE3": 50
           },
-          "SUS1": false,
-          "SUS2": true,
-          "SUS3": true
+          "SUS1": {
+            "Acceptance Criteria": false,
+            "Definition of Ready": true
+          },
+          "SUS2": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": true
+          },
+          "SUS3": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": false
+          }
         },
         "board_management_score": {
           "SGD": true,
           "BP": {
-            "Prioritizated": true,
-            "medium": 4,
-            "high": 2
+            "Prioritized": true,
+            "Medium": 2,
+            "High": 1
           },
           "Defects": {
-            "Classified": true,
-            "prioritizated": false,
-            "estimated": true
+            "Classified": false,
+            "Prioritized": false,
+            "Estimated": false
           },
           "FE+DI": {
-            "FE": true,
-            "design": false
+            "FE": 9,
+            "Design": 3
           }
         },
-        "quality_&_control_score": {
-          "SprintDefinition": 85,
-          "IssueEstimation": 78,
-          "ProjectExecution": 92,
+        "quality_control_score": {
+          "SprintDefinition": 35,
+          "IssueEstimation": 45,
+          "ProjectExecution": 55,
           "num_bugs": {
-            "num_bugs": 2,
+            "num_bugs": 4,
             "num_stories": 10,
-            "coverage": 70
+            "coverage": 0.78
           }
         }
       }
@@ -488,82 +537,62 @@
       "dados": [
         {
           "sprint": 1,
-          "score": 88
-        },
-        {
-          "sprint": 2,
-          "score": 72
-        },
-        {
-          "sprint": 3,
-          "score": 93
-        },
-        {
-          "sprint": 4,
-          "score": 67
-        },
-        {
-          "sprint": 5,
           "score": 80
         },
         {
-          "sprint": 6,
-          "score": 76
-        },
-        {
-          "sprint": 7,
+          "sprint": 2,
           "score": 85
         },
         {
-          "sprint": 8,
-          "score": 91
+          "sprint": 3,
+          "score": 90
         }
       ],
       "detailed_score": {
         "user_story_definition_score": {
           "USS": {
-            "OTE1": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": false
-            },
-            "OTE2": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": true
-            },
-            "OTE3": {
-              "Acceptance Criteria": false,
-              "Definition of Ready": true
-            }
+            "OTE1": 20,
+            "OTE2": 50,
+            "OTE3": 30
           },
-          "SUS1": true,
-          "SUS2": true,
-          "SUS3": false
+          "SUS1": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": false
+          },
+          "SUS2": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": true
+          },
+          "SUS3": {
+            "Acceptance Criteria": false,
+            "Definition of Ready": true
+          }
         },
         "board_management_score": {
           "SGD": true,
           "BP": {
-            "Prioritizated": false,
-            "medium": 3,
-            "high": 4
+            "Prioritized": false,
+            "Medium": 1,
+            "High": 3
           },
           "Defects": {
             "Classified": true,
-            "prioritizated": true,
-            "estimated": true
+            "Prioritized": true,
+            "Estimated": true
           },
           "FE+DI": {
-            "FE": true,
-            "design": true
+            "FE": 8,
+            "Design": 0
           }
         },
-        "quality_&_control_score": {
-          "SprintDefinition": 88,
-          "IssueEstimation": 83,
-          "ProjectExecution": 78,
+        "quality_control_score": {
+          "SprintDefinition": 65,
+          "IssueEstimation": 75,
+          "ProjectExecution": 85,
           "num_bugs": {
             "num_bugs": 3,
             "num_stories": 12,
-            "coverage": 75
+            "coverage": 0.9
           }
         }
       }
@@ -573,179 +602,66 @@
       "dados": [
         {
           "sprint": 1,
-          "score": 79
+          "score": 70
         },
         {
           "sprint": 2,
-          "score": 84
+          "score": 75
         },
         {
           "sprint": 3,
-          "score": 71
-        },
-        {
-          "sprint": 4,
-          "score": 90
-        },
-        {
-          "sprint": 5,
-          "score": 76
-        },
-        {
-          "sprint": 6,
-          "score": 85
-        },
-        {
-          "sprint": 7,
-          "score": 63
-        },
-        {
-          "sprint": 8,
-          "score": 92
-        },
-        {
-          "sprint": 9,
-          "score": 78
-        }
-      ],
-      "detailed_score": {
-        "user_story_definition_score": {
-          "USS": {
-            "OTE1": {
-              "Acceptance Criteria": false,
-              "Definition of Ready": true
-            },
-            "OTE2": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": true
-            },
-            "OTE3": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": false
-            }
-          },
-          "SUS1": true,
-          "SUS2": false,
-          "SUS3": true
-        },
-        "board_management_score": {
-          "SGD": true,
-          "BP": {
-            "Prioritizated": true,
-            "medium": 4,
-            "high": 3
-          },
-          "Defects": {
-            "Classified": true,
-            "prioritizated": false,
-            "estimated": true
-          },
-          "FE+DI": {
-            "FE": true,
-            "design": false
-          }
-        },
-        "quality_&_control_score": {
-          "SprintDefinition": 86,
-          "IssueEstimation": 80,
-          "ProjectExecution": 75,
-          "num_bugs": {
-            "num_bugs": 2,
-            "num_stories": 8,
-            "coverage": 68
-          }
-        }
-      }
-    },
-    {
-      "id": 0,
-      "dados": [
-        {
-          "sprint": 1,
-          "score": 83
-        },
-        {
-          "sprint": 2,
-          "score": 69
-        },
-        {
-          "sprint": 3,
-          "score": 87
-        },
-        {
-          "sprint": 4,
-          "score": 74
-        },
-        {
-          "sprint": 5,
-          "score": 89
-        },
-        {
-          "sprint": 6,
-          "score": 72
-        },
-        {
-          "sprint": 7,
-          "score": 91
-        },
-        {
-          "sprint": 8,
-          "score": 67
-        },
-        {
-          "sprint": 9,
           "score": 80
         },
         {
-          "sprint": 10,
-          "score": 75
+          "sprint": 4,
+          "score": 85
         }
       ],
       "detailed_score": {
         "user_story_definition_score": {
           "USS": {
-            "OTE1": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": false
-            },
-            "OTE2": {
-              "Acceptance Criteria": true,
-              "Definition of Ready": true
-            },
-            "OTE3": {
-              "Acceptance Criteria": false,
-              "Definition of Ready": true
-            }
+            "OTE1": 30,
+            "OTE2": 30,
+            "OTE3": 40
           },
-          "SUS1": false,
-          "SUS2": true,
-          "SUS3": true
+          "SUS1": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": true
+          },
+          "SUS2": {
+            "Acceptance Criteria": false,
+            "Definition of Ready": false
+          },
+          "SUS3": {
+            "Acceptance Criteria": true,
+            "Definition of Ready": true
+          }
         },
         "board_management_score": {
-          "SGD": true,
+          "SGD": false,
           "BP": {
-            "Prioritizated": true,
-            "medium": 3,
-            "high": 2
+            "Prioritized": true,
+            "Medium": 3,
+            "High": 2
           },
           "Defects": {
             "Classified": true,
-            "prioritizated": true,
-            "estimated": false
+            "Prioritized": false,
+            "Estimated": true
           },
           "FE+DI": {
-            "FE": false,
-            "design": true
+            "FE": 0,
+            "Design": 0
           }
         },
-        "quality_&_control_score": {
-          "SprintDefinition": 83,
-          "IssueEstimation": 78,
-          "ProjectExecution": 92,
+        "quality_control_score": {
+          "SprintDefinition": 95,
+          "IssueEstimation": 5,
+          "ProjectExecution": 15,
           "num_bugs": {
-            "num_bugs": 4,
+            "num_bugs": 5,
             "num_stories": 15,
-            "coverage": 80
+            "coverage": 0.82
           }
         }
       }

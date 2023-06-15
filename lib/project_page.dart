@@ -94,17 +94,18 @@ class _ProjectPageState extends State<ProjectPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Projects')),
+        title: Center(child: Text('Flow-boot Dashboard')),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
             padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Filter:',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            ),
+            child: Center(
+                child: Text(
+              'Projects',
+              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+            )),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -125,7 +126,7 @@ class _ProjectPageState extends State<ProjectPage> {
             child: Wrap(
               children: radioOptions.map((String option) {
                 return Container(
-                  width: MediaQuery.of(context).size.width / 2,
+                  width: MediaQuery.of(context).size.width / 2.5,
                   child: RadioListTile<String>(
                     title: Text(option),
                     value: option,

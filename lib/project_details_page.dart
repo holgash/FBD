@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
-import 'linear_charts.dart';
 import 'package:flutter/services.dart' show rootBundle;
+
+import 'aux_funcs.dart';
+import 'detailedScore.dart';
+import 'linear_charts.dart';
 import 'dart:convert';
 
 class ProjectDetailsPage extends StatefulWidget {
   final String projectName;
   final String projectType;
   final int projectId;
-  ProjectDetailsPage(this.projectName, this.projectType, this.projectId);
+
+  Future<DetailedScore>? detailedScore;
+
+  ProjectDetailsPage(this.projectName, this.projectType, this.projectId) {
+    //detailedScore = parseDetailedScore(projectId);
+  }
 
   @override
   _ProjectDetailsPageState createState() => _ProjectDetailsPageState();
@@ -21,138 +29,28 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
 
   int sprintValue = 0;
 
-  // Variáveis para armazenar os valores da aba "User Story Definition"
-  int userStoryCurrent = 15;
-  int userStoryTotal = 25;
-
-  // Variáveis para armazenar os valores da aba "Board Management"
-  int boardManagementCurrent = 20;
-  int boardManagementTotal = 25;
-
-  // Variáveis para armazenar os valores da aba "Quality & Control"
-  int qualityControlCurrent = 40;
-  int qualityControlTotal = 50;
-  // Variavel para o # of Bugs in quality
-  double coverageValue = 50;
-
-  /*List<Map<String, String>> members = [
-    {'name': 'John Doe', 'role': 'Developer'},
-    {'name': 'Jane Smith', 'role': 'Designer'},
-    {'name': 'Mike Johnson', 'role': 'Project Manager'},
-  ];*/
-
   List<Map<String, String>> members = [];
+
+  late Future<DetailedScore> detailedScore;
+
+  late DetailedScore ds;
+
+  late categoryScore categoryScores =
+      categoryScore(usdScore: 0, bmScore: 0, qcScore: 0);
 
   @override
   void initState() {
     super.initState();
+
+    fetchDetailedScore();
     fetchMembers();
-  }
-
-  Future<void> fetchMembers() async {
-    List<Map<String, String>> fetchedMembers =
-        await getMembersFromJson(widget.projectId);
-    setState(() {
-      members = fetchedMembers;
-    });
-  }
-
-  double calculateProgressValue(int current, int total) {
-    return current / total;
-  }
-
-  Color getProgressColor(double progressValue,
-      {double? threshold1, double? threshold2}) {
-    if (threshold1 != null && threshold2 != null) {
-      if (progressValue < threshold1) {
-        return Colors.red;
-      } else if (progressValue < threshold2) {
-        return Colors.yellow;
-      } else {
-        return Colors.green;
-      }
-    } else {
-      if (progressValue < 0.3) {
-        return Colors.red;
-      } else if (progressValue < 0.7) {
-        return Colors.yellow;
-      } else {
-        return Colors.green;
-      }
-    }
-  }
-
-  Future<int> obterValorSprint(int id) async {
-    try {
-      // Ler o conteúdo do arquivo JSON
-      String jsonData = await rootBundle.loadString('assets/sprint.json');
-
-      // Decodificar o conteúdo JSON
-      var data = jsonDecode(jsonData);
-
-      // Procurar o projeto com o ID fornecido
-      var projeto = data['projetos']
-          .firstWhere((projeto) => projeto['id'] == id, orElse: () => null);
-
-      // Verificar se o projeto foi encontrado
-      if (projeto != null) {
-        // Obter o array de dados do projeto
-        var dados = projeto['dados'];
-
-        // Verificar se o array de dados não está vazio
-        if (dados.isNotEmpty) {
-          // Obter o último elemento do array de dados
-          var ultimoElemento = dados.last;
-
-          // Obter o valor da sprint do último elemento
-          var valorSprint = ultimoElemento['sprint'];
-
-          // Retornar o valor da sprint
-          return valorSprint;
-        }
-      }
-    } catch (e) {
-      print('Erro ao ler o arquivo JSON: $e');
-    }
-
-    // Retornar 0 caso ocorra algum erro ou o projeto não seja encontrado
-    return 0;
-  }
-
-  Future<List<Map<String, String>>> getMembersFromJson(int id) async {
-    List<Map<String, String>> members = [];
-
-    // Ler o conteúdo do arquivo JSON
-    String jsonData = await rootBundle.loadString('assets/projects.json');
-
-    // Converter o JSON em um objeto Dart
-    dynamic data = jsonDecode(jsonData);
-
-    // Encontrar o projeto com o ID fornecido
-    Map<String, dynamic>? project = data['projetos']
-        .firstWhere((proj) => proj['id'] == id, orElse: () => null);
-
-    // Verificar se o projeto foi encontrado
-    if (project != null) {
-      // Obter a lista de membros do projeto
-      List<dynamic> membersData = project['members'];
-
-      // Iterar sobre os membros e converter para o formato desejado
-      members = membersData.map<Map<String, String>>((member) {
-        String name = member['name'];
-        String role = member['role'];
-        return {'name': name, 'role': role};
-      }).toList();
-    }
-
-    return members;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Project Details'),
+        title: Text(widget.projectName),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -175,39 +73,60 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                         Container(
                           width: 120.0,
                           child: Text(
-                            "Audit score: ${userStoryCurrent + boardManagementCurrent + qualityControlCurrent}/${userStoryTotal + boardManagementTotal + qualityControlTotal}",
+                            "Audit score:\n${categoryScores.usdScore + categoryScores.bmScore + categoryScores.qcScore}/100",
                             style: TextStyle(fontSize: 18.0),
+                            //textAlign: TextAlign.center,
                           ),
                         ),
-                        SizedBox(width: 16.0),
-                        FutureBuilder<int>(
-                          future: obterValorSprint(widget.projectId),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<int> snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Text(
-                                'Loading...',
-                                style: TextStyle(fontSize: 18.0),
-                              ); // Exibir um indicador de carregamento enquanto aguarda o resultado
-                            } else if (snapshot.hasError) {
-                              return Text(
-                                'Error',
-                                style: TextStyle(fontSize: 18.0),
-                              ); // Exibir uma mensagem de erro caso ocorra um erro durante a obtenção do valor
-                            } else {
-                              return Text(
-                                'Current Sprint: ${snapshot.data}',
-                                style: TextStyle(fontSize: 18.0),
-                              ); // Exibir o valor da sprint obtido
-                            }
-                          },
+                        Container(
+                          width: 24.0,
+                          height: 24.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: (categoryScores.usdScore +
+                                            categoryScores.bmScore +
+                                            categoryScores.qcScore) /
+                                        100 >=
+                                    0.7
+                                ? Colors.green
+                                : (categoryScores.usdScore +
+                                                categoryScores.bmScore +
+                                                categoryScores.qcScore) /
+                                            100 >=
+                                        0.5
+                                    ? Colors.yellow
+                                    : Colors
+                                        .red, // Substitua pela lógica para obter a cor desejada
+                          ),
                         ),
                       ],
                     ),
-                    Icon(
-                      _isExpandedTop ? Icons.expand_less : Icons.expand_more,
-                      size: 24.0,
+                    SizedBox(width: 16.0),
+                    FutureBuilder<int>(
+                      future: obterValorSprint(widget.projectId),
+                      builder:
+                          (BuildContext context, AsyncSnapshot<int> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Text(
+                            'Loading...',
+                            style: TextStyle(fontSize: 18.0),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text(
+                            'Error',
+                            style: TextStyle(fontSize: 18.0),
+                          );
+                        } else {
+                          return Center(
+                            child: Text(
+                              'Current Sprint:\nSprint ${snapshot.data}',
+                              style: TextStyle(fontSize: 18.0),
+                              textAlign: TextAlign.center,
+                            ),
+                          );
+                        }
+                      },
                     ),
                   ],
                 ),
@@ -253,12 +172,27 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'User Story Definition',
-                      style: TextStyle(fontSize: 18.0),
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: categoryScores.usdScore / 25 >= 0.7
+                              ? Colors.green
+                              : categoryScores.usdScore / 25 >= 0.5
+                                  ? Colors.yellow
+                                  : Colors.red,
+                          radius: 10.0,
+                        ),
+                        SizedBox(
+                            width:
+                                8.0), // Espaçamento entre o círculo e o texto
+                        Text(
+                          'User Story Definition',
+                          style: TextStyle(fontSize: 18.0),
+                        ),
+                      ],
                     ),
                     Icon(
-                      _isExpandedUserStory
+                      _isExpandedQualityControl
                           ? Icons.expand_less
                           : Icons.expand_more,
                       size: 24.0,
@@ -278,8 +212,8 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                   border: Border.all(color: Colors.black, width: 2),
                 ),
                 child: buildProgressTabIndicator(
-                  userStoryCurrent.toDouble(),
-                  userStoryTotal.toDouble(),
+                  categoryScores.usdScore.toDouble(),
+                  25,
                   'User Story Definition',
                 ),
               ),
@@ -402,12 +336,27 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Board Management',
-                      style: TextStyle(fontSize: 18.0),
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: categoryScores.bmScore / 25 >= 0.7
+                              ? Colors.green
+                              : categoryScores.bmScore / 25 >= 0.5
+                                  ? Colors.yellow
+                                  : Colors.red,
+                          radius: 10.0,
+                        ),
+                        SizedBox(
+                            width:
+                                8.0), // Espaçamento entre o círculo e o texto
+                        Text(
+                          'Board Management',
+                          style: TextStyle(fontSize: 18.0),
+                        ),
+                      ],
                     ),
                     Icon(
-                      _isExpandedBoardManagement
+                      _isExpandedQualityControl
                           ? Icons.expand_less
                           : Icons.expand_more,
                       size: 24.0,
@@ -427,8 +376,8 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                   border: Border.all(color: Colors.black, width: 2),
                 ),
                 child: buildProgressTabIndicator(
-                  boardManagementCurrent.toDouble(),
-                  boardManagementTotal.toDouble(),
+                  categoryScores.bmScore.toDouble(),
+                  25,
                   'Board Management',
                 ),
               ),
@@ -553,9 +502,24 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Quality & Control',
-                      style: TextStyle(fontSize: 18.0),
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: categoryScores.qcScore / 50 >= 0.7
+                              ? Colors.green
+                              : categoryScores.qcScore / 50 >= 0.5
+                                  ? Colors.yellow
+                                  : Colors.red,
+                          radius: 10.0,
+                        ),
+                        SizedBox(
+                            width:
+                                8.0), // Espaçamento entre o círculo e o texto
+                        Text(
+                          'Quality & Control',
+                          style: TextStyle(fontSize: 18.0),
+                        ),
+                      ],
                     ),
                     Icon(
                       _isExpandedQualityControl
@@ -578,8 +542,8 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                   border: Border.all(color: Colors.black, width: 2),
                 ),
                 child: buildProgressTabIndicator(
-                  qualityControlCurrent.toDouble(),
-                  qualityControlTotal.toDouble(),
+                  categoryScores.qcScore.toDouble(),
+                  50,
                   'Quality & Control',
                 ),
               ),
@@ -690,8 +654,8 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                           border: Border.all(color: Colors.black),
                         ),
                         child: Center(
-                          child: buildValueRectangle(
-                              "Test Coverage: ", coverageValue, "%"),
+                          child: buildValueRectangle("Test Coverage: ",
+                              ds.qualityControlScore.numBugs.coverage, "%"),
                         ),
                       ),
                     ),
@@ -708,7 +672,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                           border: Border.all(color: Colors.black),
                         ),
                         child: Center(
-                          child: coverageValue > 0.5
+                          child: ds.qualityControlScore.numBugs.coverage > 0.5
                               ? buildValueRectangle(
                                   "<=", 0.5, " Bugs / User Story")
                               : buildValueRectangle("Full Penalty", null, null),
@@ -859,5 +823,128 @@ Aqui começam as funções
         ),
       ),
     );
+  }
+
+  Future<void> fetchDetailedScore() async {
+    try {
+      detailedScore = parseDetailedScore(widget.projectId);
+      print(await parseDetailedScore(widget.projectId));
+      DetailedScore score = await detailedScore;
+
+      ds = score;
+      // Fazer a manipulação do score
+      print(ds.userStoryDefinitionScore.USS['OTE1']);
+
+      print(ds.userStoryDefinitionScore.USS);
+      print(ds.boardManagementScore.SGD);
+      print(score.qualityControlScore.sprintDefinition);
+      print(ds);
+      categoryScores = generateScores(ds);
+      print(categoryScores.usdScore);
+      print(categoryScores.bmScore);
+      print(categoryScores.qcScore);
+    } catch (error) {
+      // Tratar erros que possam ocorrer durante o carregamento do score
+      print('Erro ao carregar o score: $error');
+    }
+  }
+
+  Future<void> fetchMembers() async {
+    List<Map<String, String>> fetchedMembers =
+        await getMembersFromJson(widget.projectId);
+    setState(() {
+      members = fetchedMembers;
+    });
+  }
+
+  double calculateProgressValue(int current, int total) {
+    return current / total;
+  }
+
+  Color getProgressColor(double progressValue,
+      {double? threshold1, double? threshold2}) {
+    if (threshold1 != null && threshold2 != null) {
+      if (progressValue < threshold1) {
+        return Colors.red;
+      } else if (progressValue < threshold2) {
+        return Colors.yellow;
+      } else {
+        return Colors.green;
+      }
+    } else {
+      if (progressValue < 0.3) {
+        return Colors.red;
+      } else if (progressValue < 0.7) {
+        return Colors.yellow;
+      } else {
+        return Colors.green;
+      }
+    }
+  }
+
+  Future<int> obterValorSprint(int id) async {
+    try {
+      // Ler o conteúdo do arquivo JSON
+      String jsonData = await rootBundle.loadString('assets/sprint.json');
+
+      // Decodificar o conteúdo JSON
+      var data = jsonDecode(jsonData);
+
+      // Procurar o projeto com o ID fornecido
+      var projeto = data['projetos']
+          .firstWhere((projeto) => projeto['id'] == id, orElse: () => null);
+
+      // Verificar se o projeto foi encontrado
+      if (projeto != null) {
+        // Obter o array de dados do projeto
+        var dados = projeto['dados'];
+
+        // Verificar se o array de dados não está vazio
+        if (dados.isNotEmpty) {
+          // Obter o último elemento do array de dados
+          var ultimoElemento = dados.last;
+
+          // Obter o valor da sprint do último elemento
+          var valorSprint = ultimoElemento['sprint'];
+
+          // Retornar o valor da sprint
+          return valorSprint;
+        }
+      }
+    } catch (e) {
+      print('Erro ao ler o arquivo JSON: $e');
+    }
+
+    // Retornar 0 caso ocorra algum erro ou o projeto não seja encontrado
+    return 0;
+  }
+
+  Future<List<Map<String, String>>> getMembersFromJson(int id) async {
+    List<Map<String, String>> members = [];
+
+    // Ler o conteúdo do arquivo JSON
+    String jsonData = await rootBundle.loadString('assets/projects.json');
+
+    // Converter o JSON em um objeto Dart
+    dynamic data = jsonDecode(jsonData);
+
+    // Encontrar o projeto com o ID fornecido
+    Map<String, dynamic>? project = data['projetos']
+        .firstWhere((proj) => proj['id'] == id, orElse: () => null);
+
+    // Verificar se o projeto foi encontrado
+    if (project != null) {
+      // Obter a lista de membros do projeto
+      List<dynamic> membersData = project['members'];
+
+      // Iterar sobre os membros e converter para o formato desejado
+      members = membersData.map<Map<String, String>>((member) {
+        String name = member['name'];
+        String role = member['role'];
+        return {'name': name, 'role': role};
+      }).toList();
+    }
+
+    return members;
   }
 }
