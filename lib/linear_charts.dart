@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter/material.dart';
 import 'dart:math';
 
 class LinearCharts extends StatefulWidget {
@@ -87,18 +86,4 @@ class MySymbolRenderer extends charts.CircleSymbolRenderer {
         strokeColor: strokeColor,
         strokeWidthPx: strokeWidthPx);
   }
-}
-
-void main() {
-  runApp(
-    MaterialApp(
-      title: 'Linear Charts Example',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Linear Charts Example'),
-        ),
-        body: LinearCharts(id: 0),
-      ),
-    ),
-  );
 }

@@ -1,8 +1,7 @@
+// ignore: file_names
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import 'package:flutter/widgets.dart';
 
 class DetailedScore {
   UserStoryDefinitionScore userStoryDefinitionScore;
@@ -183,7 +182,6 @@ class QualityControlScore {
   });
 
   factory QualityControlScore.fromJson(Map<String, dynamic> json) {
-    print(json);
     return QualityControlScore(
       sprintDefinition: json['SprintDefinition'],
       issueEstimation: json['IssueEstimation'],

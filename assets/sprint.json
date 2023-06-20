@@ -105,8 +105,8 @@
           "SGD": false,
           "BP": {
             "Prioritized": false,
-            "Medium": 3,
-            "High": 2
+            "Medium": 30,
+            "High": 20
           },
           "Defects": {
             "Classified": true,
@@ -141,9 +141,9 @@
       "detailed_score": {
         "user_story_definition_score": {
           "USS": {
-            "OTE1": 10,
-            "OTE2": 20,
-            "OTE3": 70
+            "OTE1": 0,
+            "OTE2": 10,
+            "OTE3": 90
           },
           "SUS1": {
             "Acceptance Criteria": true,
@@ -590,7 +590,7 @@
           "IssueEstimation": 75,
           "ProjectExecution": 85,
           "num_bugs": {
-            "num_bugs": 3,
+            "num_bugs": 35,
             "num_stories": 12,
             "coverage": 0.9
           }
@@ -661,7 +661,7 @@
           "num_bugs": {
             "num_bugs": 5,
             "num_stories": 15,
-            "coverage": 0.82
+            "coverage": 0.32
           }
         }
       }

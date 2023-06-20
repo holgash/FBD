@@ -1,40 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
-
 import 'aux_funcs.dart';
 import 'detailedScore.dart';
 import 'linear_charts.dart';
-import 'dart:convert';
 
+// ignore: must_be_immutable
 class ProjectDetailsPage extends StatefulWidget {
+  //variveis de entrada
   final String projectName;
   final String projectType;
   final int projectId;
-
   Future<DetailedScore>? detailedScore;
 
-  ProjectDetailsPage(this.projectName, this.projectType, this.projectId) {
-    //detailedScore = parseDetailedScore(projectId);
-  }
+  ProjectDetailsPage(this.projectName, this.projectType, this.projectId);
 
   @override
+  // ignore: library_private_types_in_public_api
   _ProjectDetailsPageState createState() => _ProjectDetailsPageState();
 }
 
 class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
+  //variaveis locais
   bool _isExpandedTop = false;
   bool _isExpandedUserStory = false;
   bool _isExpandedBoardManagement = false;
   bool _isExpandedQualityControl = false;
-
   int sprintValue = 0;
-
   List<Map<String, String>> members = [];
-
   late Future<DetailedScore> detailedScore;
-
   late DetailedScore ds;
-
   late categoryScore categoryScores =
       categoryScore(usdScore: 0, bmScore: 0, qcScore: 0);
 
@@ -64,39 +57,41 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
               },
               child: Container(
                 padding: EdgeInsets.all(16.0),
-                color: Colors.grey[200],
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1.5,
+                  ),
+                ),
+                //aba superior(detalhes do projeto)
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
-                        Container(
+                        SizedBox(
                           width: 120.0,
-                          child: Text(
-                            "Audit score:\n${categoryScores.usdScore + categoryScores.bmScore + categoryScores.qcScore}/100",
-                            style: TextStyle(fontSize: 18.0),
-                            //textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Container(
-                          width: 24.0,
-                          height: 24.0,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: (categoryScores.usdScore +
-                                            categoryScores.bmScore +
-                                            categoryScores.qcScore) /
-                                        100 >=
-                                    0.7
-                                ? Colors.green
-                                : (categoryScores.usdScore +
-                                                categoryScores.bmScore +
-                                                categoryScores.qcScore) /
-                                            100 >=
-                                        0.5
-                                    ? Colors.yellow
-                                    : Colors
-                                        .red, // Substitua pela lógica para obter a cor desejada
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'Audit score\n',
+                              style: TextStyle(
+                                  fontSize: 18.0, color: Colors.black),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text:
+                                      '${categoryScores.usdScore + categoryScores.bmScore + categoryScores.qcScore}/100',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      //selecionar a cor do texto baseado no audit score atual
+                                      color: getProgressColor(
+                                          (categoryScores.usdScore +
+                                                  categoryScores.bmScore +
+                                                  categoryScores.qcScore) /
+                                              100)),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -119,10 +114,20 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                           );
                         } else {
                           return Center(
-                            child: Text(
-                              'Current Sprint:\nSprint ${snapshot.data}',
-                              style: TextStyle(fontSize: 18.0),
-                              textAlign: TextAlign.center,
+                            child: RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                    fontSize: 18.0, color: Colors.black),
+                                children: [
+                                  TextSpan(text: 'Current sprint\n'),
+                                  TextSpan(
+                                    text: 'Sprint ${snapshot.data}',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              textAlign: TextAlign.right,
                             ),
                           );
                         }
@@ -132,6 +137,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 ),
               ),
             ),
+            //aba superior(detalhes do projeto) expandida
             if (_isExpandedTop)
               Container(
                 padding: EdgeInsets.all(16.0),
@@ -144,6 +150,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                       style: TextStyle(fontSize: 18.0),
                     ),
                     SizedBox(height: 8.0),
+                    //gerar lista de membros do projeto
                     ListView.builder(
                       shrinkWrap: true,
                       itemCount: members.length,
@@ -156,10 +163,23 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                         );
                       },
                     ),
+                    Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Score by sprint',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    //gerar grafico com o histórico de audit scores
                     LinearCharts(id: widget.projectId),
                   ],
                 ),
               ),
+            //segunda aba(User Story Definition(USD))
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -175,16 +195,12 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                     Row(
                       children: [
                         CircleAvatar(
-                          backgroundColor: categoryScores.usdScore / 25 >= 0.7
-                              ? Colors.green
-                              : categoryScores.usdScore / 25 >= 0.5
-                                  ? Colors.yellow
-                                  : Colors.red,
-                          radius: 10.0,
+                          backgroundColor:
+                              //gerar cor do circulo baseado na pontuação atual dessa categoria
+                              getProgressColor(categoryScores.usdScore / 25),
+                          radius: 8.0,
                         ),
-                        SizedBox(
-                            width:
-                                8.0), // Espaçamento entre o círculo e o texto
+                        SizedBox(width: 8.0),
                         Text(
                           'User Story Definition',
                           style: TextStyle(fontSize: 18.0),
@@ -224,27 +240,105 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 ),
                 child: Column(
                   children: [
+                    /*
+                    Toda a logica por trás das pontuações são definidas a partir das regras de negócio que não estão divulgadas no código. 
+                    */
+                    //User Story Size
                     buildProgressTabText(
                       'User Story Size',
                       'Size of Original Time Estimate (OTE) of estimated issues',
                     ),
                     generateContainer(
                       'OTE > 3 days',
-                      'No penalty',
-                      '0%(No penalty)',
-                      '0%',
+                      ds.userStoryDefinitionScore.USS['OTE1'] == 0
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.userStoryDefinitionScore.USS['OTE1'] == 0
+                          ? '0%(No penalty)'
+                          : '> 0%(Full penalty)',
+                      '${ds.userStoryDefinitionScore.USS['OTE1']}%',
                     ),
                     generateContainer(
                       'OTE > 2 days & >= 3 days',
-                      'No penalty',
-                      '<=10%(No penalty)',
-                      '5%',
+                      ds.userStoryDefinitionScore.USS['OTE2']! <= 10
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.userStoryDefinitionScore.USS['OTE2']! <= 10
+                          ? '<=10%(No penalty)'
+                          : '> 10%(Full penalty)',
+                      '${ds.userStoryDefinitionScore.USS['OTE2']}%',
                     ),
                     generateContainer(
                       'OTE <= 2 days',
-                      'No penalty',
-                      '>=90%(No penalty)',
-                      '95%',
+                      ds.userStoryDefinitionScore.USS['OTE3']! >= 90
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.userStoryDefinitionScore.USS['OTE3']! >= 90
+                          ? '>=90%(No penalty)'
+                          : '< 90%(Full penalty)',
+                      '${ds.userStoryDefinitionScore.USS['OTE3']}%',
+                    ),
+                  ],
+                ),
+              ),
+            if (_isExpandedUserStory)
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Sample User stories (top 3 by size)',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //Sample User story 1
+                          buildProgressTabText(
+                            'Sample User story 1',
+                            'key-001',
+                          ),
+                          generateContainer(
+                            'Acceptance Criteria',
+                            ds.userStoryDefinitionScore.SUS1
+                                        .acceptanceCriteria ==
+                                    true
+                                ? 'No penalty'
+                                : 'penalty',
+                            ds.userStoryDefinitionScore.SUS1
+                                        .acceptanceCriteria ==
+                                    true
+                                ? 'filled'
+                                : 'unfilled',
+                          ),
+                          generateContainer(
+                            'Definition of Ready',
+                            ds.userStoryDefinitionScore.SUS1
+                                        .definitionOfReady ==
+                                    true
+                                ? 'No penalty'
+                                : 'penalty',
+                            ds.userStoryDefinitionScore.SUS1
+                                        .definitionOfReady ==
+                                    true
+                                ? 'filled'
+                                : 'unfilled',
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -257,44 +351,30 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    buildProgressTabText(
-                      'Sample User story 1',
-                      'key-001',
-                    ),
-                    generateContainer(
-                      'Acceptance Criteria ',
-                      'penalty',
-                      'unfilled',
-                    ),
-                    generateContainer(
-                      'Definiton of Ready',
-                      'No penalty',
-                      'filled',
-                    ),
-                  ],
-                ),
-              ),
-            if (_isExpandedUserStory)
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                    //Sample User story 2
                     buildProgressTabText(
                       'Sample User story 2',
                       'key-002',
                     ),
                     generateContainer(
-                      'Acceptance Criteria ',
-                      'penalty',
-                      'unfilled',
+                      'Acceptance Criteria',
+                      ds.userStoryDefinitionScore.SUS2.acceptanceCriteria ==
+                              true
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.userStoryDefinitionScore.SUS2.acceptanceCriteria ==
+                              true
+                          ? 'filled'
+                          : 'unfilled',
                     ),
                     generateContainer(
-                      'Definiton of Ready',
-                      'No penalty',
-                      'filled',
+                      'Definition of Ready',
+                      ds.userStoryDefinitionScore.SUS2.definitionOfReady == true
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.userStoryDefinitionScore.SUS2.definitionOfReady == true
+                          ? 'filled'
+                          : 'unfilled',
                     ),
                   ],
                 ),
@@ -307,23 +387,35 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    //Sample User story 3
                     buildProgressTabText(
                       'Sample User story 3',
                       'key-003',
                     ),
                     generateContainer(
-                      'Acceptance Criteria ',
-                      'penalty',
-                      'unfilled',
+                      'Acceptance Criteria',
+                      ds.userStoryDefinitionScore.SUS3.acceptanceCriteria ==
+                              true
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.userStoryDefinitionScore.SUS3.acceptanceCriteria ==
+                              true
+                          ? 'filled'
+                          : 'unfilled',
                     ),
                     generateContainer(
-                      'Definiton of Ready',
-                      'No penalty',
-                      'filled',
+                      'Definition of Ready',
+                      ds.userStoryDefinitionScore.SUS3.definitionOfReady == true
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.userStoryDefinitionScore.SUS3.definitionOfReady == true
+                          ? 'filled'
+                          : 'unfilled',
                     ),
                   ],
                 ),
               ),
+            //terceira aba(Board Management(BM))
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -339,16 +431,12 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                     Row(
                       children: [
                         CircleAvatar(
-                          backgroundColor: categoryScores.bmScore / 25 >= 0.7
-                              ? Colors.green
-                              : categoryScores.bmScore / 25 >= 0.5
-                                  ? Colors.yellow
-                                  : Colors.red,
-                          radius: 10.0,
+                          backgroundColor:
+                              //gerar cor baseado no valor atual da categoria
+                              getProgressColor(categoryScores.bmScore / 25),
+                          radius: 8.0,
                         ),
-                        SizedBox(
-                            width:
-                                8.0), // Espaçamento entre o círculo e o texto
+                        SizedBox(width: 8.0),
                         Text(
                           'Board Management',
                           style: TextStyle(fontSize: 18.0),
@@ -389,14 +477,19 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    //Sprint goal definition
                     buildProgressTabText(
                       'Sprint Goal Definition',
                       'Sprint goal definition field is filled',
                     ),
                     generateContainer(
                       'Sprint Goal Definition',
-                      'No penalty',
-                      'Filled',
+                      ds.boardManagementScore.SGD == true
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.boardManagementScore.SGD == true
+                          ? 'Filled'
+                          : 'Unfilled',
                     ),
                   ],
                 ),
@@ -408,26 +501,39 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 ),
                 child: Column(
                   children: [
+                    //Backlog prioritization
                     buildProgressTabText(
                       'Backlog prioritization',
                       'Backlog is prioritized with “Must haves”/highest priority, “Should”/high priority and “Could”/Medium priority items.',
                     ),
                     generateContainer(
                       'Prioritizated',
-                      'No penalty',
-                      'No penalty',
+                      ds.boardManagementScore.bpScore.prioritized == true
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.boardManagementScore.bpScore.prioritized == true
+                          ? 'No penalty'
+                          : 'Penalty',
                     ),
                     generateContainer(
                       'Medium != 100%',
-                      'No penalty',
-                      'No penalty',
-                      '80%',
+                      ds.boardManagementScore.bpScore.medium != 100
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.boardManagementScore.bpScore.medium != 100
+                          ? 'No penalty'
+                          : 'Penalty',
+                      '${ds.boardManagementScore.bpScore.medium}%',
                     ),
                     generateContainer(
                       'High <= 80%',
-                      'No penalty',
-                      'No penalty',
-                      '10%',
+                      ds.boardManagementScore.bpScore.high <= 80
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.boardManagementScore.bpScore.high <= 80
+                          ? 'No penalty'
+                          : 'Penalty',
+                      '${ds.boardManagementScore.bpScore.high}%',
                     ),
                   ],
                 ),
@@ -439,27 +545,37 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 ),
                 child: Column(
                   children: [
+                    //Defects
                     buildProgressTabText(
                       'Defects',
                       'Defects classification, prioritization and estimation (estimation applies only to Major defects)',
                     ),
                     generateContainer(
                       'Classified',
-                      'penalty',
-                      'Full penalty',
-                      'Not',
+                      ds.boardManagementScore.defects.classified == true
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.boardManagementScore.defects.classified == true
+                          ? 'No penalty'
+                          : 'Full penalty',
                     ),
                     generateContainer(
                       'Prioritizated',
-                      'penalty',
-                      'Full penalty',
-                      'Not',
+                      ds.boardManagementScore.defects.prioritized == true
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.boardManagementScore.defects.prioritized == true
+                          ? 'No penalty'
+                          : 'Full penalty',
                     ),
                     generateContainer(
                       'Estimated',
-                      'penalty',
-                      'Full penalty',
-                      'Not',
+                      ds.boardManagementScore.defects.estimated == true
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.boardManagementScore.defects.estimated == true
+                          ? 'No penalty'
+                          : 'Full penalty',
                     ),
                   ],
                 ),
@@ -471,21 +587,30 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 ),
                 child: Column(
                   children: [
+                    //Front End + Design issues
                     buildProgressTabText(
                       'Front End + Design Issues',
                       'Exists issues from category Front End and/or Design',
                     ),
                     generateContainer(
                       'Front End',
-                      'No penalty',
-                      'Exists',
-                      '10',
+                      ds.boardManagementScore.feDesign.FE > 0
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.boardManagementScore.feDesign.FE > 0
+                          ? 'Exists'
+                          : 'Doesn\'t exists',
+                      ds.boardManagementScore.feDesign.FE.toString(),
                     ),
                     generateContainer(
                       'Design',
-                      'No penalty',
-                      'Exists',
-                      '5',
+                      ds.boardManagementScore.feDesign.design > 0
+                          ? 'No penalty'
+                          : 'penalty',
+                      ds.boardManagementScore.feDesign.design > 0
+                          ? 'Exists'
+                          : 'Doesn\'t exists',
+                      ds.boardManagementScore.feDesign.design.toString(),
                     ),
                   ],
                 ),
@@ -505,16 +630,12 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                     Row(
                       children: [
                         CircleAvatar(
-                          backgroundColor: categoryScores.qcScore / 50 >= 0.7
-                              ? Colors.green
-                              : categoryScores.qcScore / 50 >= 0.5
-                                  ? Colors.yellow
-                                  : Colors.red,
-                          radius: 10.0,
+                          backgroundColor:
+                              //gerar cor baseado no valor atual da categoria
+                              getProgressColor(categoryScores.qcScore / 50),
+                          radius: 8.0,
                         ),
-                        SizedBox(
-                            width:
-                                8.0), // Espaçamento entre o círculo e o texto
+                        SizedBox(width: 8.0),
                         Text(
                           'Quality & Control',
                           style: TextStyle(fontSize: 18.0),
@@ -555,12 +676,13 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    //Sprint definition
                     buildProgressTabText(
                       'Sprint Definition',
                       'Accuracy = # of US on “UAT ready” status/ # of US',
                     ),
                     buildProgressTabIndicator(
-                      95,
+                      ds.qualityControlScore.sprintDefinition.toDouble(),
                       100,
                       'Score',
                       optionalParam1: 0.499,
@@ -568,7 +690,13 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                     ),
                     Center(
                       child: Text(
-                        'Excellent(No Penalty)',
+                        ds.qualityControlScore.sprintDefinition >= 90
+                            ? 'Excellent(No Penalty)'
+                            : ds.qualityControlScore.sprintDefinition >= 85
+                                ? 'Good(5% Penalty)'
+                                : ds.qualityControlScore.sprintDefinition >= 50
+                                    ? 'To improve (10% Penalty)'
+                                    : 'Not met(Full penalty)',
                         style: TextStyle(fontSize: 16.0),
                       ),
                     ),
@@ -583,20 +711,27 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    //Issues estimation
                     buildProgressTabText(
                       'Issue estimation',
                       'Accuracy = # of estimated issues / # of total issues',
                     ),
                     buildProgressTabIndicator(
-                      90,
+                      ds.qualityControlScore.issueEstimation.toDouble(),
                       100,
                       'Score',
-                      optionalParam1: 0.499,
+                      optionalParam1: 0.7499,
                       optionalParam2: 0.85,
                     ),
                     Center(
                       child: Text(
-                        'Good(5% Penalty)',
+                        ds.qualityControlScore.issueEstimation == 100
+                            ? 'Excellent(No Penalty)'
+                            : ds.qualityControlScore.issueEstimation >= 85
+                                ? 'Good(5% Penalty)'
+                                : ds.qualityControlScore.issueEstimation >= 75
+                                    ? 'To improve (10% Penalty)'
+                                    : 'Not met(Full penalty)',
                         style: TextStyle(fontSize: 16.0),
                       ),
                     ),
@@ -611,20 +746,27 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    //Project execution
                     buildProgressTabText(
                       'Project execution',
                       'Accuracy = 100% - |∑total time / ∑estimated| (precise description pending)',
                     ),
                     buildProgressTabIndicator(
-                      70,
+                      ds.qualityControlScore.projectExecution.toDouble(),
                       100,
                       'Score',
-                      optionalParam1: 0.499,
+                      optionalParam1: 0.699,
                       optionalParam2: 0.85,
                     ),
                     Center(
                       child: Text(
-                        'To improve(5% Penalty)',
+                        ds.qualityControlScore.projectExecution >= 95
+                            ? 'Excellent(No Penalty)'
+                            : ds.qualityControlScore.projectExecution >= 85
+                                ? 'Good(2% Penalty)'
+                                : ds.qualityControlScore.projectExecution >= 70
+                                    ? 'To improve (5% Penalty)'
+                                    : 'Not met(Full penalty)',
                         style: TextStyle(fontSize: 16.0),
                       ),
                     ),
@@ -639,6 +781,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    //Number of bugs in quality
                     buildProgressTabText(
                       '# of Bugs in quality',
                       '# of Bugs / # of User Stories',
@@ -673,15 +816,50 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                         ),
                         child: Center(
                           child: ds.qualityControlScore.numBugs.coverage > 0.5
-                              ? buildValueRectangle(
-                                  "<=", 0.5, " Bugs / User Story")
+                              ? ds.qualityControlScore.numBugs.numBugs /
+                                          ds.qualityControlScore.numBugs
+                                              .numStories <=
+                                      0.5
+                                  ? buildValueRectangle(
+                                      "<=", 0.5, " Bugs / User Story")
+                                  : ds.qualityControlScore.numBugs.numBugs /
+                                              ds.qualityControlScore.numBugs
+                                                  .numStories <=
+                                          2
+                                      ? buildValueRectangle(
+                                          "<=", 2, " Bugs / User Story")
+                                      : ds.qualityControlScore.numBugs.numBugs /
+                                                  ds.qualityControlScore.numBugs
+                                                      .numStories <=
+                                              3
+                                          ? buildValueRectangle(
+                                              "<=", 3, " Bugs / User Story")
+                                          : buildValueRectangle(
+                                              "Full Penalty", null, null)
                               : buildValueRectangle("Full Penalty", null, null),
                         ),
                       ),
                     ),
                     Center(
                         child: Text(
-                      'Excellent(No penalty)',
+                      ds.qualityControlScore.numBugs.coverage > 0.5
+                          ? ds.qualityControlScore.numBugs.numBugs /
+                                      ds.qualityControlScore.numBugs
+                                          .numStories <=
+                                  0.5
+                              ? 'Excellent(No penalty)'
+                              : ds.qualityControlScore.numBugs.numBugs /
+                                          ds.qualityControlScore.numBugs
+                                              .numStories <=
+                                      2
+                                  ? 'Good(2% penalty)'
+                                  : ds.qualityControlScore.numBugs.numBugs /
+                                              ds.qualityControlScore.numBugs
+                                                  .numStories <=
+                                          3
+                                      ? 'To improve(5% penalty)'
+                                      : 'Not met (Full penalty)'
+                          : 'Not met (Full penalty)',
                       style: TextStyle(
                           fontSize: 16.0, fontWeight: FontWeight.bold),
                     )),
@@ -696,155 +874,17 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
 
 /*
 /////////////////////////////////////////////////////////////////////////// 
-Aqui começam as funções
+Funções locais
 /////////////////////////////////////////////////////////////////////////// 
 */
-  Widget buildProgressTabText(
-    String sizeTitle,
-    String sizeDescription,
-  ) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 8.0),
-          Text(
-            sizeTitle,
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 8.0),
-          Text(
-            sizeDescription,
-            style: TextStyle(fontSize: 16.0),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildProgressTabIndicator(
-      double progressValue, double progressTotal, String title,
-      {double? optionalParam1, double? optionalParam2}) {
-    double progressRatio = progressValue / progressTotal;
-    Color progressColor = getProgressColor(progressRatio,
-        threshold1: optionalParam1, threshold2: optionalParam2);
-
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          SizedBox(height: 16.0),
-          Text(
-            title,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-          ),
-          LinearProgressIndicator(
-            value: progressRatio,
-            valueColor: AlwaysStoppedAnimation<Color>(progressColor),
-            backgroundColor: Colors.grey[300],
-          ),
-          SizedBox(height: 8.0),
-          Text(
-            '${(progressValue.toInt())}/${(progressTotal.toInt())}',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget generateContainer(String text1, String text2, String text3,
-      [String? optionalText]) {
-    Color circleColor;
-
-    if (text2 == "penalty") {
-      circleColor = Colors.red;
-    } else if (text2 == "partially") {
-      circleColor = Colors.yellow;
-    } else if (text2 == "No penalty") {
-      circleColor = Colors.green;
-    } else {
-      circleColor = Colors.transparent;
-    }
-
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              text1,
-              style: TextStyle(fontSize: 16.0),
-            ),
-          ),
-          SizedBox(width: 8.0),
-          CircleAvatar(
-            radius: 8.0,
-            backgroundColor: circleColor,
-          ),
-          SizedBox(width: 8.0),
-          Expanded(
-            child: Text(
-              text3,
-              style: TextStyle(fontSize: 16.0),
-            ),
-          ),
-          if (optionalText != null && optionalText.isNotEmpty) ...[
-            SizedBox(width: 8.0),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-              ),
-              width: 100.0, // Defina o tamanho fixo desejado aqui
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  optionalText,
-                  style: TextStyle(fontSize: 16.0),
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget buildValueRectangle(String text, double? value, String? optionalText) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
-      ),
-      child: Center(
-        child: Text(
-          text + (value != null ? value.toString() : '') + (optionalText ?? ''),
-          style: TextStyle(fontSize: 16.0),
-        ),
-      ),
-    );
-  }
-
   Future<void> fetchDetailedScore() async {
     try {
       detailedScore = parseDetailedScore(widget.projectId);
-      print(await parseDetailedScore(widget.projectId));
       DetailedScore score = await detailedScore;
-
       ds = score;
-      // Fazer a manipulação do score
-      print(ds.userStoryDefinitionScore.USS['OTE1']);
-
-      print(ds.userStoryDefinitionScore.USS);
-      print(ds.boardManagementScore.SGD);
-      print(score.qualityControlScore.sprintDefinition);
-      print(ds);
       categoryScores = generateScores(ds);
-      print(categoryScores.usdScore);
-      print(categoryScores.bmScore);
-      print(categoryScores.qcScore);
     } catch (error) {
-      // Tratar erros que possam ocorrer durante o carregamento do score
+      //Se der erro no carregamento do score
       print('Erro ao carregar o score: $error');
     }
   }
@@ -855,96 +895,5 @@ Aqui começam as funções
     setState(() {
       members = fetchedMembers;
     });
-  }
-
-  double calculateProgressValue(int current, int total) {
-    return current / total;
-  }
-
-  Color getProgressColor(double progressValue,
-      {double? threshold1, double? threshold2}) {
-    if (threshold1 != null && threshold2 != null) {
-      if (progressValue < threshold1) {
-        return Colors.red;
-      } else if (progressValue < threshold2) {
-        return Colors.yellow;
-      } else {
-        return Colors.green;
-      }
-    } else {
-      if (progressValue < 0.3) {
-        return Colors.red;
-      } else if (progressValue < 0.7) {
-        return Colors.yellow;
-      } else {
-        return Colors.green;
-      }
-    }
-  }
-
-  Future<int> obterValorSprint(int id) async {
-    try {
-      // Ler o conteúdo do arquivo JSON
-      String jsonData = await rootBundle.loadString('assets/sprint.json');
-
-      // Decodificar o conteúdo JSON
-      var data = jsonDecode(jsonData);
-
-      // Procurar o projeto com o ID fornecido
-      var projeto = data['projetos']
-          .firstWhere((projeto) => projeto['id'] == id, orElse: () => null);
-
-      // Verificar se o projeto foi encontrado
-      if (projeto != null) {
-        // Obter o array de dados do projeto
-        var dados = projeto['dados'];
-
-        // Verificar se o array de dados não está vazio
-        if (dados.isNotEmpty) {
-          // Obter o último elemento do array de dados
-          var ultimoElemento = dados.last;
-
-          // Obter o valor da sprint do último elemento
-          var valorSprint = ultimoElemento['sprint'];
-
-          // Retornar o valor da sprint
-          return valorSprint;
-        }
-      }
-    } catch (e) {
-      print('Erro ao ler o arquivo JSON: $e');
-    }
-
-    // Retornar 0 caso ocorra algum erro ou o projeto não seja encontrado
-    return 0;
-  }
-
-  Future<List<Map<String, String>>> getMembersFromJson(int id) async {
-    List<Map<String, String>> members = [];
-
-    // Ler o conteúdo do arquivo JSON
-    String jsonData = await rootBundle.loadString('assets/projects.json');
-
-    // Converter o JSON em um objeto Dart
-    dynamic data = jsonDecode(jsonData);
-
-    // Encontrar o projeto com o ID fornecido
-    Map<String, dynamic>? project = data['projetos']
-        .firstWhere((proj) => proj['id'] == id, orElse: () => null);
-
-    // Verificar se o projeto foi encontrado
-    if (project != null) {
-      // Obter a lista de membros do projeto
-      List<dynamic> membersData = project['members'];
-
-      // Iterar sobre os membros e converter para o formato desejado
-      members = membersData.map<Map<String, String>>((member) {
-        String name = member['name'];
-        String role = member['role'];
-        return {'name': name, 'role': role};
-      }).toList();
-    }
-
-    return members;
   }
 }

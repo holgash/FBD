@@ -5,6 +5,7 @@ import 'dart:convert';
 
 class ProjectPage extends StatefulWidget {
   @override
+  // ignore: library_private_types_in_public_api
   _ProjectPageState createState() => _ProjectPageState();
 }
 
@@ -23,6 +24,7 @@ class _ProjectPageState extends State<ProjectPage> {
     selectedRadio = 'Global';
   }
 
+  //ler arquivo de entrada para pegar a lista de projetos
   void loadProjectDetails() async {
     String jsonData = await rootBundle.loadString('assets/projects.json');
     List<dynamic> projects = jsonDecode(jsonData)['projetos'];
@@ -45,6 +47,7 @@ class _ProjectPageState extends State<ProjectPage> {
     });
   }
 
+  //filtrar que projetos aparecem na tela
   List<Map<String, dynamic>> filterProjects() {
     if (selectedFilter == 'All Projects' && selectedRadio == 'Global') {
       return projectDetails;
@@ -64,6 +67,7 @@ class _ProjectPageState extends State<ProjectPage> {
     }
   }
 
+  //fazer a navegação da tela
   void _onProjectSelected(
       String projectName, String projectType, int projectId) {
     Navigator.push(
@@ -78,7 +82,6 @@ class _ProjectPageState extends State<ProjectPage> {
   void _onRadioSelected(String? value) {
     setState(() {
       selectedRadio = value;
-
       filteredProjectDetails = filterProjects();
     });
   }
@@ -125,7 +128,7 @@ class _ProjectPageState extends State<ProjectPage> {
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Wrap(
               children: radioOptions.map((String option) {
-                return Container(
+                return SizedBox(
                   width: MediaQuery.of(context).size.width / 2.5,
                   child: RadioListTile<String>(
                     title: Text(option),
@@ -142,6 +145,7 @@ class _ProjectPageState extends State<ProjectPage> {
             child: ListView.builder(
               itemCount: filteredProjectDetails.length,
               itemBuilder: (BuildContext context, int index) {
+                //variaveis locais pra passar pra lista de projetos
                 final project = filteredProjectDetails[index];
                 final id = project['id'];
                 final projectName = project['project_name'];
