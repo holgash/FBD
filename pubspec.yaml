@@ -28,3 +28,4 @@ flutter:
   assets:
     - assets/projects.json
     - assets/sprint.json
+    - assets/flow-logo.png

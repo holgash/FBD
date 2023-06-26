@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'project_page.dart';
 
 void main() {
@@ -13,7 +14,38 @@ class ProjectApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ProjectPage(),
+      home: SplashScreen(),
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(Duration(seconds: 3), () {
+      // Navegar para a próxima tela após 3 segundos (tempo de exibição da logo)
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProjectPage()),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        color: Color.fromRGBO(94, 178, 235, 1.0),
+        child: Center(
+          child: Image.asset('assets/flow-logo.png'),
+        ),
+      ),
     );
   }
 }
