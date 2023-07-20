@@ -25,3 +25,6 @@ Link para o video de apresentação: https://youtu.be/F6wi-JjzwIc
 
 ## Video de demonstração
 Link para o video de demonstração: https://youtu.be/nwusyo8sAqo
+
+## Link da playstore
+Link para o aplicativo na playstore: https://play.google.com/store/apps/details?id=com.main.floow_boot_dashboard
