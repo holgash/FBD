@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'project_page.dart';
 
+//Main do programa
 void main() {
   runApp(ProjectApp());
 }

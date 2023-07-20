@@ -1,4 +1,4 @@
-package com.example.floow_boot_dashboard
+package com.main.floow_boot_dashboard
 
 import io.flutter.embedding.android.FlutterActivity
 

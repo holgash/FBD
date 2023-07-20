@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.floow_boot_dashboard">
+    package="com.main.floow_boot_dashboard">
    <application
         android:label="floow_boot_dashboard"
         android:name="${applicationName}"
