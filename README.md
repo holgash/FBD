@@ -19,3 +19,9 @@ Link para o protótipo dessa aplicação: https://www.figma.com/proto/vjfPIWCcqh
 
 ## Widget tree
 Link para o diagrama do widget tree dessa aplicação: https://my.visme.co/view/90j4mzgm-flow-boot-dashboard-widget-tree
+
+## Video de apresentação
+Link para o video de apresentação: https://youtu.be/F6wi-JjzwIc
+
+## Video de demonstração
+Link para o video de demonstração: https://youtu.be/nwusyo8sAqo
